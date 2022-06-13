@@ -1,0 +1,24 @@
+{
+    "schemaVersion": 1,
+    "id": "silo",
+    "version": "${version}",
+    "name": "Silo",
+    "description": "Serialize Java objects to and from NBT data without the boilerplate",
+    "authors": [
+        "ickerio",
+        "BlueZeeKing",
+        "PyPylia"
+    ],
+    "contact": {
+        "homepage": "https://github.com/ickerio/silo",
+        "sources": "https://github.com/ickerio/silo"
+    },
+    "license": "MIT",
+    "icon": "assets/silo/icon.png",
+    "environment": "*",
+    "depends": {
+        "fabricloader": ">=0.14.6",
+        "minecraft": "~1.19",
+        "java": ">=17"
+    }
+}

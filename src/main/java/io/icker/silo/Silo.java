@@ -26,9 +26,9 @@ public class Silo {
         if (element instanceof NbtCompound) {
             NbtIo.writeCompressed((NbtCompound) element, file);
         }
-        // else error
-        
     }
 
-    // Use Object.isArray() to check if array .fromNbt(Faction[].class, fileName)
+    public static void dummy() {
+        System.out.println("Dummy called x");
+    }
 }

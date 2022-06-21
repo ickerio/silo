@@ -1,0 +1,13 @@
+{
+    "schemaVersion": 1,
+    "id": "silotest",
+    "version": "${version}",
+    "name": "Silo Test Mod",
+    "license": "MIT",
+    "environment": "*",
+    "entrypoints": {
+        "main": [
+            "io.icker.test.SiloTest"
+        ]
+    }
+}

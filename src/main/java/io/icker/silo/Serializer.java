@@ -8,11 +8,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import io.icker.silo.annotations.Name;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtList;
 
-public class Database {
+public class Serializer {
     private static final HashMap<Class<?>, HashMap<String, Field>> cache = new HashMap<Class<?>, HashMap<String, Field>>();
 
     public static <T> T deserialize(Class<T> clazz, NbtElement value) throws IOException, ReflectiveOperationException {
@@ -32,7 +33,9 @@ public class Database {
 
             Class<?> type = field.getType();
 
-            if (ArrayList.class.isAssignableFrom(type)) {
+            if (clazz.isArray()) {
+                field.set(item, deserializeList(genericType, (NbtList) compound.get(key)));
+            } else if (ArrayList.class.isAssignableFrom(type)) {
                 Class<?> genericType = (Class<?>) ((ParameterizedType) field.getGenericType()).getActualTypeArguments()[0];
                 field.set(item, deserializeList(genericType, (NbtList) compound.get(key)));
             } else {
@@ -59,11 +62,6 @@ public class Database {
             return SerializerRegistry.toNbtElement(clazz, item);
         }
 
-        // TODO finish classes - this doesn't work
-        if (clazz.isArray()) {
-            return serializeArray(clazz, cast(item));
-        }
-
         HashMap<String, Field> fields = cache.get(clazz);
         NbtCompound compound = new NbtCompound();
         for (Map.Entry<String, Field> entry : fields.entrySet()) {
@@ -75,7 +73,9 @@ public class Database {
 
             if (data == null) continue;
 
-            if (ArrayList.class.isAssignableFrom(type)) {
+            if (clazz.isArray()) {
+                compound.put(key, serializeArray(clazz, cast(item)));
+            } else if (ArrayList.class.isAssignableFrom(type)) {
                 Class<?> genericType = (Class<?>) ((ParameterizedType) field.getGenericType()).getActualTypeArguments()[0];
                 compound.put(key, serializeList(genericType, cast(data)));
             } else {
@@ -110,9 +110,9 @@ public class Database {
         HashMap<String, Field> fields = new HashMap<String, Field>();
 
         for (Field field : clazz.getDeclaredFields()) {
-            if (field.isAnnotationPresent(io.icker.silo.Field.class)) {
+            if (field.isAnnotationPresent(Name.class)) {
                 field.setAccessible(true);
-                fields.put(field.getAnnotation(io.icker.silo.Field.class).value(), field);
+                fields.put(field.getAnnotation(Name.class).value(), field);
 
                 Class<?> type = field.getType();
                 if (!SerializerRegistry.contains(type)) {

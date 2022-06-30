@@ -39,9 +39,11 @@ public class SerializerRegistry {
         registry.put(float.class, new Serializer<Float, NbtFloat>(val -> NbtFloat.of(val), el -> el.floatValue()));
         registry.put(double.class, new Serializer<Double, NbtDouble>(val -> NbtDouble.of(val), el -> el.doubleValue()));
         registry.put(boolean.class, new Serializer<Boolean, NbtByte>(val -> NbtByte.of(val), el -> el.byteValue() != 0));
+
         registry.put(byte[].class, new Serializer<Byte[], NbtByteArray>(val -> new NbtByteArray(ArrayUtils.toPrimitive(val)), el -> ArrayUtils.toObject(el.getByteArray())));
         registry.put(int[].class, new Serializer<Integer[], NbtIntArray>(val -> new NbtIntArray(ArrayUtils.toPrimitive(val)), el -> ArrayUtils.toObject(el.getIntArray())));
         registry.put(long[].class, new Serializer<Long[], NbtLongArray>(val -> new NbtLongArray(ArrayUtils.toPrimitive(val)), el -> ArrayUtils.toObject(el.getLongArray())));
+
         registry.put(String.class, new Serializer<String, NbtString>(val -> NbtString.of(val), el -> el.asString()));
         registry.put(UUID.class, new Serializer<UUID, NbtIntArray>(val -> NbtHelper.fromUuid(val), el -> NbtHelper.toUuid(el)));
     }
